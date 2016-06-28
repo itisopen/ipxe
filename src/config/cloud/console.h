@@ -1,31 +1,69 @@
+#ifndef CONFIG_CONSOLE_H
+#define CONFIG_CONSOLE_H
+
+/** @file
+ *
+ * Console configuration
+ *
+ * These options specify the console types that iPXE will use for
+ * interaction with the user.
+ *
+ */
+
+FILE_LICENCE ( GPL2_OR_LATER_OR_UBDL );
+
+#include <config/defaults.h>
+
 /*
- * Console configuration suitable for use in public cloud
- * environments, or any environment where direct console access is not
- * available.
+ * Default console types
+ *
+ * These are all enabled by default for the appropriate platforms.
+ * You may disable them if needed.
  *
  */
 
-/* Log to syslog(s) server
- *
- * The syslog server to be used must be specified via e.g.
- * "set syslog 192.168.0.1".
- */
-#define CONSOLE_SYSLOG
-#define CONSOLE_SYSLOGS
+//#undef	CONSOLE_PCBIOS		/* Default BIOS console */
+//#undef	CONSOLE_EFI		/* Default EFI console */
+//#undef	CONSOLE_LINUX		/* Default Linux console */
 
-/* Log to serial port
+/*
+ * Additional console types
  *
- * Note that the serial port output from an AWS EC2 virtual machine is
- * generally available (as the "System Log") only after the instance
- * has been stopped.
+ * These are not enabled by default, but may be useful in your
+ * environment.
+ *
  */
-#define CONSOLE_SERIAL
 
-/* Log to partition on local disk
+#define	CONSOLE_SERIAL		/* Serial port console */
+//#define	CONSOLE_FRAMEBUFFER	/* Graphical framebuffer console */
+#define	CONSOLE_SYSLOG		/* Syslog console */
+#define	CONSOLE_SYSLOGS		/* Encrypted syslog console */
+//#define	CONSOLE_VMWARE		/* VMware logfile console */
+//#define	CONSOLE_DEBUGCON	/* Bochs/QEMU/KVM debug port console */
+#define	CONSOLE_INT13		/* INT13 disk log console */
+
+/*
+ * Very obscure console types
  *
- * If all other log mechanisms fail then the VM boot disk containing
- * the iPXE image can be detached and attached to another machine in
- * the same cloud, allowing the log to be retrieved from the log
- * partition.
+ * You almost certainly do not need to enable these.
+ *
  */
-#define CONSOLE_INT13
+
+//#define	CONSOLE_DIRECT_VGA	/* Direct access to VGA card */
+//#define	CONSOLE_PC_KBD		/* Direct access to PC keyboard */
+
+/* Keyboard map (available maps in hci/keymap/) */
+#define	KEYBOARD_MAP	us
+
+/* Control which syslog() messages are generated.
+ *
+ * Note that this is not related in any way to CONSOLE_SYSLOG.
+ */
+#define	LOG_LEVEL	LOG_ALL
+
+#include <config/named.h>
+#include NAMED_CONFIG(console.h)
+#include <config/local/console.h>
+#include LOCAL_NAMED_CONFIG(console.h)
+
+#endif /* CONFIG_CONSOLE_H */
